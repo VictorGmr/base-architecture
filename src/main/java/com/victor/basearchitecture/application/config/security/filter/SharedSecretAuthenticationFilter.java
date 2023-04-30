@@ -3,6 +3,7 @@ package com.victor.basearchitecture.application.config.security.filter;
 import com.victor.basearchitecture.application.config.security.authentication.SharedSecretAuthentication;
 import com.victor.basearchitecture.application.config.security.manager.SharedSecretAuthenticationManager;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -27,11 +28,14 @@ public class SharedSecretAuthenticationFilter extends OncePerRequestFilter {
 
         SharedSecretAuthentication authentication = new SharedSecretAuthentication(sharedSecret, false);
 
-        Authentication currentAuthentication = sharedSecretAuthenticationManager.authenticate(authentication);
-
-        if(currentAuthentication.isAuthenticated()) {
-            SecurityContextHolder.getContext().setAuthentication(currentAuthentication);
-            filterChain.doFilter(request, response);
+        try {
+            Authentication currentAuthentication = sharedSecretAuthenticationManager.authenticate(authentication);
+            if(currentAuthentication.isAuthenticated()) {
+                SecurityContextHolder.getContext().setAuthentication(currentAuthentication);
+                filterChain.doFilter(request, response);
+            }
+        } catch (BadCredentialsException exception) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, exception.getMessage());
         }
 
     }

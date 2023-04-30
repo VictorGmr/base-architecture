@@ -17,7 +17,7 @@ public class SharedSecretAuthentication implements Authentication {
 
     @Override
     public boolean isAuthenticated() {
-        return false;
+        return authentication;
     }
 
     @Override
