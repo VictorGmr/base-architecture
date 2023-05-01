@@ -1,6 +1,5 @@
 package com.victor.basearchitecture.infrastructure.entity;
 
-import com.sun.scenario.effect.Offset;
 import com.victor.basearchitecture.domain.model.Person;
 
 import javax.persistence.Entity;
